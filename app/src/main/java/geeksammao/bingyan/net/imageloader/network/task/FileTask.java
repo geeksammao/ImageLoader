@@ -3,10 +3,8 @@ package geeksammao.bingyan.net.imageloader.network.task;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
-import android.widget.ImageView;
 
 import geeksammao.bingyan.net.imageloader.cache.MemoryLRUCache;
-import geeksammao.bingyan.net.imageloader.callback.ImageLoadCallback;
 import geeksammao.bingyan.net.imageloader.util.ImageUtil;
 
 /**
@@ -14,14 +12,14 @@ import geeksammao.bingyan.net.imageloader.util.ImageUtil;
  */
 public class FileTask extends BaseTask {
     private String uri;
+    private String actualUri;
     private Handler handler;
     private MemoryLRUCache<String, Bitmap> memoryLRUCache;
-    private ImageLoadCallback callback;
-    private ImageView imageView;
 
     public FileTask(String uri, Handler handler, MemoryLRUCache<String, Bitmap> memoryLRUCache) {
-        super();
+        // get the actual path
         this.uri = uri;
+        this.actualUri = uri.substring(5);
         this.handler = handler;
         this.memoryLRUCache = memoryLRUCache;
     }
@@ -29,7 +27,7 @@ public class FileTask extends BaseTask {
     @Override
     void startTask() {
         if (imageView != null) {
-            final Bitmap bitmap = ImageUtil.decodeBitmapWithScale(imageView, uri);
+            final Bitmap bitmap = ImageUtil.decodeBitmapWithScale(imageView, actualUri);
             handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -42,7 +40,7 @@ public class FileTask extends BaseTask {
         }
 
         try {
-            final Bitmap bitmap = BitmapFactory.decodeFile(uri);
+            final Bitmap bitmap = BitmapFactory.decodeFile(actualUri);
             handler.post(new Runnable() {
                 @Override
                 public void run() {
@@ -52,19 +50,9 @@ public class FileTask extends BaseTask {
             memoryLRUCache.put(uri, bitmap);
         } catch (Exception e) {
             e.printStackTrace();
-            if (callback != null){
+            if (callback != null) {
                 callback.onLoadFailed(uri);
             }
         }
-    }
-
-    @Override
-    public void setCallback(ImageLoadCallback callback) {
-        this.callback = callback;
-    }
-
-    @Override
-    public void setImageView(ImageView imageView) {
-        this.imageView = imageView;
     }
 }

@@ -146,10 +146,6 @@ public class HttpUtil {
         } catch (Exception e) {
             e.printStackTrace();
             requestResult.setData(null);
-        } finally {
-            if (urlConnection != null) {
-                urlConnection.disconnect();
-            }
         }
 
         return requestResult;

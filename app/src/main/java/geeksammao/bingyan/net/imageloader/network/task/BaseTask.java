@@ -8,6 +8,8 @@ import geeksammao.bingyan.net.imageloader.callback.ImageLoadCallback;
  * Created by Geeksammao on 1/6/16.
  */
 public abstract class BaseTask extends Thread {
+    protected ImageLoadCallback callback;
+    protected ImageView imageView;
 
     @Override
     public void run() {
@@ -18,7 +20,12 @@ public abstract class BaseTask extends Thread {
 
     abstract void startTask();
 
-    public abstract void setCallback(ImageLoadCallback callback);
+    public void setCallback(ImageLoadCallback callback) {
+        this.callback = callback;
+    }
 
-    public abstract void setImageView(ImageView imageView);
+    public void setImageView(ImageView imageView) {
+        this.imageView = imageView;
+    }
+
 }

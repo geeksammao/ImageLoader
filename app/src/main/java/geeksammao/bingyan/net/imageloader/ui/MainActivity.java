@@ -1,4 +1,4 @@
-package geeksammao.bingyan.net.imageloader;
+package geeksammao.bingyan.net.imageloader.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import geeksammao.bingyan.net.imageloader.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,9 +19,22 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.recyclerview);
+//        final int[] width = new int[1];
+//        final int[] height = new int[1];
+//
+//        imageView.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                Log.e("sam", "run");
+//                width[0] = imageView.getMeasuredWidth();
+//                height[0] = imageView.getMeasuredHeight();
+//            }
+//        });
+//
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new GridLayoutManager(this,3));
-        recyclerView.setAdapter(new Adapter(this));
+        final Adapter adapter = new Adapter(this);
+        recyclerView.setAdapter(adapter);
     }
 
     @Override

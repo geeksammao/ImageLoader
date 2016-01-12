@@ -1,8 +1,9 @@
 package geeksammao.bingyan.net.imageloader.util;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Point;
+import android.view.View;
 import android.widget.ImageView;
 
 import java.io.InputStream;
@@ -11,18 +12,6 @@ import java.io.InputStream;
  * Created by Geeksammao on 1/7/16.
  */
 public class ImageUtil {
-    public static void measureImageView(final ImageView imageView, final Point point) {
-        imageView.post(new Runnable() {
-            @Override
-            public void run() {
-                int width = imageView.getMeasuredWidth();
-                int height = imageView.getMeasuredHeight();
-
-                point.set(width, height);
-            }
-        });
-    }
-
     public static int getScaleSize(BitmapFactory.Options options, int viewWidth, int viewHeight) {
         int inSampleSize = 1;
         // 0 means no scaling
@@ -43,17 +32,32 @@ public class ImageUtil {
         return inSampleSize;
     }
 
-    public static Bitmap decodeBitmapWithScale(ImageView imageView, byte[] bitmapBytes) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
+    public static Bitmap decodeBitmapWithScale(final ImageView imageView, byte[] bitmapBytes) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length, options);
 
-        Point point = new Point();
-        ImageUtil.measureImageView(imageView, point);
-        options.inSampleSize = ImageUtil.getScaleSize(options, point.x, point.y);
+
+        options.inSampleSize = getSampleSize(imageView, options);
         options.inJustDecodeBounds = false;
 
         return BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length, options);
+    }
+
+    private static int getSampleSize(final ImageView imageView, final BitmapFactory.Options options) {
+        int width = imageView.getLayoutParams().width;
+        int height = imageView.getLayoutParams().height;
+
+        if (width < 0 || height < 0) {
+            int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec((1 << 30) - 1, View.MeasureSpec.AT_MOST);
+            int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec((1 << 30) - 1, View.MeasureSpec.AT_MOST);
+            imageView.measure(widthMeasureSpec, heightMeasureSpec);
+
+            width = imageView.getMeasuredWidth();
+            height = imageView.getMeasuredHeight();
+        }
+
+        return getScaleSize(options, width, height);
     }
 
     public static Bitmap decodeBitmapWithScale(ImageView imageView, String path) {
@@ -61,24 +65,32 @@ public class ImageUtil {
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(path, options);
 
-        Point point = new Point();
-        ImageUtil.measureImageView(imageView, point);
-        options.inSampleSize = ImageUtil.getScaleSize(options, point.x, point.y);
+        options.inSampleSize = getSampleSize(imageView, options);
         options.inJustDecodeBounds = false;
 
         return BitmapFactory.decodeFile(path, options);
     }
 
-    public static Bitmap decodeBitmapWithScale(ImageView imageView, InputStream inputStream) {
-        BitmapFactory.Options options = new BitmapFactory.Options();
+    public static Bitmap decodeBitmapWithScale(final ImageView imageView, InputStream inputStream) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
         BitmapFactory.decodeStream(inputStream, null, options);
 
-        Point point = new Point();
-        ImageUtil.measureImageView(imageView, point);
-        options.inSampleSize = ImageUtil.getScaleSize(options, point.x, point.y);
+
+        options.inSampleSize = getSampleSize(imageView, options);
         options.inJustDecodeBounds = false;
 
         return BitmapFactory.decodeStream(inputStream, null, options);
+    }
+
+    public static Bitmap decodeBitmapWithScale(final ImageView imageView, Resources res, int id) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(res, id, options);
+
+        options.inSampleSize = getSampleSize(imageView, options);
+        options.inJustDecodeBounds = false;
+
+        return BitmapFactory.decodeResource(res, id, options);
     }
 }

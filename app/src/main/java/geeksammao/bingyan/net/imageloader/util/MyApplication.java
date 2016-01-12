@@ -1,4 +1,4 @@
-package geeksammao.bingyan.net.imageloader;
+package geeksammao.bingyan.net.imageloader.util;
 
 import android.app.Application;
 

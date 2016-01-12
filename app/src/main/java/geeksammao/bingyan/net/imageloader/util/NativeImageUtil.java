@@ -28,7 +28,7 @@ public class NativeImageUtil {
         }
 
         mCursor.moveToLast();
-        String firstPath = mCursor.getString(mCursor
+        String firstPath = "file:/" + mCursor.getString(mCursor
                 .getColumnIndex(MediaStore.Images.Media.DATA));
         imagePathList.add(firstPath);
 
@@ -36,7 +36,9 @@ public class NativeImageUtil {
         while (mCursor.moveToPrevious()) {
             String path = mCursor.getString(mCursor
                     .getColumnIndex(MediaStore.Images.Media.DATA));
-            imagePathList.add(path);
+            StringBuilder builder = new StringBuilder("file:/");
+            String actualPath = builder.append(path).toString();
+            imagePathList.add(actualPath);
         }
         mCursor.close();
 
