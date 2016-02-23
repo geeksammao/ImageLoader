@@ -67,7 +67,7 @@ public class ImageLoader {
         options.inSampleSize = 5;
         res = context.getResources();
         placeholderBitmap = BitmapFactory.decodeResource(res, R.color.white, options);
-        memoryLRUCache = new MemoryLRUCache<String, Bitmap>(maxSize / 8) {
+        memoryLRUCache = new MemoryLRUCache<String, Bitmap>(maxSize / 6) {
             @Override
             protected int sizeOf(String s, Bitmap bitmap) {
                 return bitmap.getByteCount();
@@ -140,11 +140,25 @@ public class ImageLoader {
             } else {
                 callback.onLoadCompleted(uri, bitmap);
             }
-            Log.e("a", "lru cache hit");
             return;
         }
 
-        FileTask task = new FileTask(uri, handler, memoryLRUCache);
+        if (urlMap.containsKey(imageView) && imageView != null) {
+            if (uri.equals(urlMap.get(imageView))) {
+                return;
+            } else {
+                imageView.setImageBitmap(placeholderBitmap);
+                urlMap.put(imageView,uri);
+            }
+        } else if (!urlMap.containsKey(imageView) && imageView != null){
+            urlMap.put(imageView, uri);
+        }
+
+        if (imageView != null) {
+            imageView.setTag(uri);
+        }
+
+        FileTask task = new FileTask(this,uri, handler, memoryLRUCache);
         if (callback != null) {
             // can play some animation or display progress bar here
             callback.onLoadStarted(uri);
@@ -194,17 +208,18 @@ public class ImageLoader {
         }
 
         // 3.http
-//        if (urlMap.containsKey(imageView) && imageView != null) {
-//            if (uri.equals(urlMap.get(imageView))) {
-//                return;
-//            } else if(urlMap.get(imageView) != null){
-//                uri = urlMap.get(imageView);
-//            }
-//        }
+        if (urlMap.containsKey(imageView) && imageView != null) {
+            if (uri.equals(urlMap.get(imageView))) {
+                return;
+            } else {
+                urlMap.put(imageView,uri);
+            }
+        } else {
+            urlMap.put(imageView, uri);
+        }
 
         if (imageView != null) {
             imageView.setTag(uri);
-            urlMap.put(imageView, uri);
         }
 
         HttpTask task = new HttpTask(this, uri, handler, diskCache, memoryLRUCache);
@@ -245,7 +260,10 @@ public class ImageLoader {
     private Bitmap getImageFromCache(String uri, ImageView imageView) {
         Bitmap bitmap = memoryLRUCache.get(uri);
         if (bitmap == null) {
+            Log.e("a","cache not hit");
             imageView.setImageBitmap(placeholderBitmap);
+        } else {
+            Log.e("a", "cache hit");
         }
 
         return bitmap;

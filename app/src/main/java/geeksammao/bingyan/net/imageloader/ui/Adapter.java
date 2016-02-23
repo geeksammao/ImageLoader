@@ -10,7 +10,7 @@ import java.util.List;
 
 import geeksammao.bingyan.net.imageloader.ImageLoader;
 import geeksammao.bingyan.net.imageloader.R;
-import geeksammao.bingyan.net.imageloader.constant.Images;
+import geeksammao.bingyan.net.imageloader.util.MyApplication;
 import geeksammao.bingyan.net.imageloader.util.NativeImageUtil;
 
 /**
@@ -21,8 +21,8 @@ public class Adapter extends RecyclerView.Adapter<MyViewHolder> {
     private boolean loading;
     private List<String> pathList;
 
-    public Adapter(Context context) {
-        this.context = context;
+    public Adapter() {
+        this.context = MyApplication.getInstance();
         this.loading = true;
         pathList = NativeImageUtil.getNativeImagePath(context);
     }
@@ -41,13 +41,15 @@ public class Adapter extends RecyclerView.Adapter<MyViewHolder> {
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         ImageLoader imageLoader = ImageLoader.getInstance(context);
-        imageLoader.loadImageToImageView(Images.images[position], holder.imageView);
+//        imageLoader.loadImageToImageView(Images.images[position], holder.imageView);
+        imageLoader.loadImageToImageView(pathList.get(position), holder.imageView);
 
-//        Ion.with(context).load(Images.images[position]).intoImageView(holder.imageView);
+//        Ion.with(context).load(pathList.get(position)).intoImageView(holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-        return Images.images.length;
+//        return Images.images.length;
+        return pathList.size();
     }
 }

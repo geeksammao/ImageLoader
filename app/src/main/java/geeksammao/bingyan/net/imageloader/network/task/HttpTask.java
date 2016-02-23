@@ -63,7 +63,7 @@ public class HttpTask extends BaseTask {
                         });
                         // save as memory cache
                         memoryLRUCache.put(uri, bitmap);
-                        imageLoader.removeUrlFromMap(imageView);
+//                        imageLoader.removeUrlFromMap(imageView);
                     }
                     // else,
                     // start a new task
@@ -72,12 +72,21 @@ public class HttpTask extends BaseTask {
 //                                handler, diskCache, memoryLRUCache);
 //                        newTask.setImageView(imageView);
 //                        imageLoader.executeNewTask(newTask);
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                imageLoader.loadImageToImageView((String) imageView.getTag(),imageView);
-                            }
-                        });
+                        if (imageView.getTag() != null) {
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    imageLoader.loadImageToImageView((String) imageView.getTag(), imageView);
+                                }
+                            });
+                        } else {
+                            handler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    imageLoader.loadImageToImageView(uri, imageView);
+                                }
+                            });
+                        }
                     }
 
                     return;

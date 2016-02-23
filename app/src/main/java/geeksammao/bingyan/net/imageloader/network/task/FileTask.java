@@ -3,22 +3,28 @@ package geeksammao.bingyan.net.imageloader.network.task;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
+import android.util.Log;
 
+import geeksammao.bingyan.net.imageloader.ImageLoader;
+import geeksammao.bingyan.net.imageloader.R;
 import geeksammao.bingyan.net.imageloader.cache.MemoryLRUCache;
 import geeksammao.bingyan.net.imageloader.util.ImageUtil;
+import geeksammao.bingyan.net.imageloader.util.MyApplication;
 
 /**
  * Created by Geeksammao on 1/7/16.
  */
 public class FileTask extends BaseTask {
+    private ImageLoader imageLoader;
     private String uri;
     private String actualUri;
     private Handler handler;
     private MemoryLRUCache<String, Bitmap> memoryLRUCache;
 
-    public FileTask(String uri, Handler handler, MemoryLRUCache<String, Bitmap> memoryLRUCache) {
+    public FileTask(ImageLoader imageLoader, String uri, Handler handler, MemoryLRUCache<String, Bitmap> memoryLRUCache) {
         // get the actual path
         this.uri = uri;
+        this.imageLoader = imageLoader;
         this.actualUri = uri.substring(5);
         this.handler = handler;
         this.memoryLRUCache = memoryLRUCache;
@@ -27,14 +33,30 @@ public class FileTask extends BaseTask {
     @Override
     void startTask() {
         if (imageView != null) {
-            final Bitmap bitmap = ImageUtil.decodeBitmapWithScale(imageView, actualUri);
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    imageView.setImageBitmap(bitmap);
+            if (imageView.getTag() != null && uri.equals(imageView.getTag())) {
+                final Bitmap bitmap = ImageUtil.decodeBitmapWithScale(imageView, actualUri);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        imageView.setImageBitmap(bitmap);
+                    }
+                });
+                if (bitmap != null) {
+                    memoryLRUCache.put(uri, bitmap);
                 }
-            });
-            memoryLRUCache.put(uri, bitmap);
+                Log.e("sam","tag equals");
+            } else {
+                Log.e("sam","tag not equals");
+                if (imageView.getTag() != null) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            imageView.setImageBitmap(BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.color.white, new BitmapFactory.Options()));
+                            imageLoader.loadImageToImageView((String) imageView.getTag(), imageView);
+                        }
+                    });
+                }
+            }
 
             return;
         }
