@@ -19,18 +19,6 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        final int[] width = new int[1];
-//        final int[] height = new int[1];
-//
-//        imageView.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                Log.e("sam", "run");
-//                width[0] = imageView.getMeasuredWidth();
-//                height[0] = imageView.getMeasuredHeight();
-//            }
-//        });
-//
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new GridLayoutManager(this,3));
         final Adapter adapter = new Adapter();

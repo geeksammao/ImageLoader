@@ -7,6 +7,5 @@
         android:id="@+id/item_imv"
         android:layout_width="192dp"
         android:layout_height="192dp"
-        android:src="@drawable/ic_launcher"
         android:scaleType="centerCrop"/>
 </FrameLayout>
