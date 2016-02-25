@@ -44,7 +44,7 @@ public class ImageLoader {
     private DiskCache diskCache;
     private MemoryLRUCache<String, Bitmap> memoryLRUCache;
     private ExecutorService defaultThreadPool = Executors.newFixedThreadPool(4);
-    private ExecutorService  serialThreadPool = Executors.newFixedThreadPool(1);
+    private ExecutorService  serialThreadPool = Executors.newFixedThreadPool(2);
 
     public static ImageLoader getInstance(Context context) {
         if (mImageLoader == null) {
@@ -132,7 +132,7 @@ public class ImageLoader {
         }
     }
 
-    private void loadImageFromFile(String uri, ImageView imageView, ImageLoadCallback callback) {
+    private void loadImageFromFile(String uri, final ImageView imageView, ImageLoadCallback callback) {
         Bitmap bitmap = getImageFromCache(uri, imageView);
         if (bitmap != null) {
             if (callback == null) {
@@ -142,6 +142,29 @@ public class ImageLoader {
             }
             return;
         }
+
+//        final String cacheFileName = MD5.hashKeyForDisk(uri);
+//        final InputStream inputStream = diskCache.getStream(cacheFileName);
+//
+//        final String url = uri;
+//
+//        if (inputStream != null) {
+//            serialThreadPool.execute(new Runnable() {
+//                @Override
+//                public void run() {
+//                    final Bitmap mBitmap = BitmapFactory.decodeStream(inputStream);
+//                    handler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            imageView.setImageBitmap(mBitmap);
+//                        }
+//                    });
+//                    memoryLRUCache.put(url, mBitmap);
+//                }
+//            });
+//
+//            return;
+//        }
 
         if (urlMap.containsKey(imageView) && imageView != null) {
             if (uri.equals(urlMap.get(imageView))) {
@@ -158,7 +181,7 @@ public class ImageLoader {
             imageView.setTag(uri);
         }
 
-        FileTask task = new FileTask(this,uri, handler, memoryLRUCache);
+        FileTask task = new FileTask(this,uri, handler, diskCache,memoryLRUCache);
         if (callback != null) {
             // can play some animation or display progress bar here
             callback.onLoadStarted(uri);

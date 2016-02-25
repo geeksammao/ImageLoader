@@ -3,6 +3,7 @@ package geeksammao.bingyan.net.imageloader.util;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -66,6 +67,7 @@ public class ImageUtil {
         BitmapFactory.decodeFile(path, options);
 
         options.inSampleSize = getSampleSize(imageView, options);
+        Log.e("a","sample size" + options.inSampleSize);
         options.inJustDecodeBounds = false;
 
         return BitmapFactory.decodeFile(path, options);
