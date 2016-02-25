@@ -18,11 +18,11 @@ import java.util.concurrent.Executors;
 import geeksammao.bingyan.net.imageloader.cache.DiskCache;
 import geeksammao.bingyan.net.imageloader.cache.MD5;
 import geeksammao.bingyan.net.imageloader.cache.MemoryLRUCache;
-import geeksammao.bingyan.net.imageloader.callback.ImageLoadCallback;
-import geeksammao.bingyan.net.imageloader.network.task.AssetsTask;
-import geeksammao.bingyan.net.imageloader.network.task.BaseTask;
-import geeksammao.bingyan.net.imageloader.network.task.FileTask;
-import geeksammao.bingyan.net.imageloader.network.task.HttpTask;
+import geeksammao.bingyan.net.imageloader.core.callback.ImageLoadCallback;
+import geeksammao.bingyan.net.imageloader.core.network.task.AssetsTask;
+import geeksammao.bingyan.net.imageloader.core.network.task.BaseTask;
+import geeksammao.bingyan.net.imageloader.core.network.task.FileTask;
+import geeksammao.bingyan.net.imageloader.core.network.task.HttpTask;
 import geeksammao.bingyan.net.imageloader.util.MyApplication;
 
 /**
