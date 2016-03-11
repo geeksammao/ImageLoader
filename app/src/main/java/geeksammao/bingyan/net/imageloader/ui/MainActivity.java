@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
 
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new GridLayoutManager(this,3));
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         final Adapter adapter = new Adapter();
         recyclerView.setAdapter(adapter);
     }

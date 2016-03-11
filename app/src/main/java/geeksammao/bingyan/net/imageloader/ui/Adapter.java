@@ -49,7 +49,7 @@ public class Adapter extends RecyclerView.Adapter<MyViewHolder> {
 
     @Override
     public int getItemCount() {
-//        return Images.images.length;
+//        return 6;
         return pathList.size();
     }
 }
