@@ -1,5 +1,10 @@
 package geeksammao.bingyan.net.imageloader;
 
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -9,11 +14,6 @@ import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
-
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import geeksammao.bingyan.net.imageloader.cache.DiskCache;
 import geeksammao.bingyan.net.imageloader.cache.MD5;
@@ -44,7 +44,7 @@ public class ImageLoader {
     private DiskCache diskCache;
     private MemoryLRUCache<String, Bitmap> memoryLRUCache;
     private ExecutorService defaultThreadPool = Executors.newFixedThreadPool(4);
-    private ExecutorService  serialThreadPool = Executors.newFixedThreadPool(2);
+    private ExecutorService serialThreadPool = Executors.newFixedThreadPool(2);
 
     public static ImageLoader getInstance(Context context) {
         if (mImageLoader == null) {
@@ -67,12 +67,7 @@ public class ImageLoader {
         options.inSampleSize = 5;
         res = context.getResources();
         placeholderBitmap = BitmapFactory.decodeResource(res, R.color.white, options);
-        memoryLRUCache = new MemoryLRUCache<String, Bitmap>(maxSize / 6) {
-            @Override
-            protected int sizeOf(String s, Bitmap bitmap) {
-                return bitmap.getByteCount();
-            }
-        };
+        memoryLRUCache = new MemoryLRUCache<>(maxSize / 6);
     }
 
     public void setPlaceholder(int resID) {
@@ -82,7 +77,7 @@ public class ImageLoader {
     }
 
     public void loadImage(String uri, ImageLoadCallback callback) {
-        if (Thread.currentThread() != Looper.getMainLooper().getThread()){
+        if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
             throw new IllegalThreadStateException("Must call this method from main thread");
         }
 
@@ -108,7 +103,7 @@ public class ImageLoader {
     }
 
     public void loadImageToImageView(String uri, ImageView view) {
-        if (Thread.currentThread() != Looper.getMainLooper().getThread()){
+        if (Thread.currentThread() != Looper.getMainLooper().getThread()) {
             throw new IllegalThreadStateException("Must call this method from main thread");
         }
 
@@ -171,9 +166,9 @@ public class ImageLoader {
                 return;
             } else {
                 imageView.setImageBitmap(placeholderBitmap);
-                urlMap.put(imageView,uri);
+                urlMap.put(imageView, uri);
             }
-        } else if (!urlMap.containsKey(imageView) && imageView != null){
+        } else if (!urlMap.containsKey(imageView) && imageView != null) {
             urlMap.put(imageView, uri);
         }
 
@@ -181,7 +176,7 @@ public class ImageLoader {
             imageView.setTag(uri);
         }
 
-        FileTask task = new FileTask(this,uri, handler, diskCache,memoryLRUCache);
+        FileTask task = new FileTask(this, uri, handler, diskCache, memoryLRUCache);
         if (callback != null) {
             // can play some animation or display progress bar here
             callback.onLoadStarted(uri);
@@ -235,7 +230,7 @@ public class ImageLoader {
             if (uri.equals(urlMap.get(imageView))) {
                 return;
             } else {
-                urlMap.put(imageView,uri);
+                urlMap.put(imageView, uri);
             }
         } else {
             urlMap.put(imageView, uri);
@@ -283,7 +278,7 @@ public class ImageLoader {
     private Bitmap getImageFromCache(String uri, ImageView imageView) {
         Bitmap bitmap = memoryLRUCache.get(uri);
         if (bitmap == null) {
-            Log.e("a","cache not hit");
+            Log.e("a", "cache not hit");
             imageView.setImageBitmap(placeholderBitmap);
         } else {
             Log.e("a", "cache hit");

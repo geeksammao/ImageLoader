@@ -1,15 +1,16 @@
 package geeksammao.bingyan.net.imageloader.ui;
 
+import java.util.List;
+
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import java.util.List;
-
 import geeksammao.bingyan.net.imageloader.ImageLoader;
 import geeksammao.bingyan.net.imageloader.R;
+import geeksammao.bingyan.net.imageloader.constant.Images;
 import geeksammao.bingyan.net.imageloader.util.MyApplication;
 import geeksammao.bingyan.net.imageloader.util.NativeImageUtil;
 
@@ -41,8 +42,8 @@ public class Adapter extends RecyclerView.Adapter<MyViewHolder> {
     @Override
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         ImageLoader imageLoader = ImageLoader.getInstance(context);
-//        imageLoader.loadImageToImageView(Images.images[position], holder.imageView);
-        imageLoader.loadImageToImageView(pathList.get(position), holder.imageView);
+        imageLoader.loadImageToImageView(Images.images[position], holder.imageView);
+//        imageLoader.loadImageToImageView(pathList.get(position), holder.imageView);
 
 //        Ion.with(context).load(Images.images[position]).intoImageView(holder.imageView);
     }
@@ -50,6 +51,6 @@ public class Adapter extends RecyclerView.Adapter<MyViewHolder> {
     @Override
     public int getItemCount() {
 //        return 6;
-        return pathList.size();
+        return Images.images.length;
     }
 }
