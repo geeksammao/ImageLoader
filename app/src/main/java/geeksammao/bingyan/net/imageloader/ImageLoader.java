@@ -43,6 +43,7 @@ public class ImageLoader {
     private Handler handler = new Handler(Looper.getMainLooper());
     private DiskCache diskCache;
     private MemoryLRUCache<String, Bitmap> memoryLRUCache;
+    private BaseTask loadTask;
     private ExecutorService defaultThreadPool = Executors.newFixedThreadPool(4);
     private ExecutorService serialThreadPool = Executors.newFixedThreadPool(2);
 
@@ -54,7 +55,6 @@ public class ImageLoader {
                 }
             }
         }
-
         return mImageLoader;
     }
 
@@ -81,25 +81,34 @@ public class ImageLoader {
             throw new IllegalThreadStateException("Must call this method from main thread");
         }
 
+        // load from memory cache
+        if (loadFromMemoryCache(uri, null, callback)) {
+            return;
+        }
+
         // get the scheme by substring the uri
         String scheme = TextUtils.substring(uri, 0, 4);
 
         switch (scheme) {
             case HTTP:
-                loadImageFromHttp(uri, null, callback);
+                loadTask = new HttpTask(this, uri, handler, diskCache, memoryLRUCache);
                 break;
             case FILE:
-                loadImageFromFile(uri, null, callback);
+                loadTask = new FileTask(this, uri, handler, diskCache, memoryLRUCache);
                 break;
             case CONTENT_PROVIDER:
-                loadImageFromFile(uri, null, callback);
+                loadTask = new FileTask(this, uri, handler, diskCache, memoryLRUCache);
                 break;
             case ASSETS:
-                loadImageFromAssets(uri, null, callback);
+                loadTask = new AssetsTask(uri, handler, memoryLRUCache, MyApplication.getInstance());
                 break;
             default:
                 throw new IllegalArgumentException("Unknown image uri");
         }
+        callback.onLoadStarted(uri);
+        loadTask.setCallback(callback);
+
+        defaultThreadPool.execute(loadTask);
     }
 
     public void loadImageToImageView(String uri, ImageView view) {
@@ -107,101 +116,39 @@ public class ImageLoader {
             throw new IllegalThreadStateException("Must call this method from main thread");
         }
 
-        String scheme = TextUtils.substring(uri, 0, 4);
+        // load from memory cache
+        if (loadFromMemoryCache(uri, view, null)) {
+            return;
+        }
 
+        // load from disk cache
+        if (loadFromDiskCache(uri, view)) {
+            return;
+        }
+
+        String scheme = TextUtils.substring(uri, 0, 4);
         switch (scheme) {
             case HTTP:
-                loadImageFromHttp(uri, view, null);
+                loadTask = new HttpTask(this, uri, handler, diskCache, memoryLRUCache);
                 break;
             case FILE:
-                loadImageFromFile(uri, view, null);
+                loadTask = new FileTask(this, uri, handler, diskCache, memoryLRUCache);
                 break;
             case CONTENT_PROVIDER:
-                loadImageFromFile(uri, view, null);
+                loadTask = new FileTask(this, uri, handler, diskCache, memoryLRUCache);
                 break;
             case ASSETS:
-                loadImageFromAssets(uri, view, null);
+                loadTask = new AssetsTask(uri, handler, memoryLRUCache, MyApplication.getInstance());
                 break;
             default:
                 throw new IllegalArgumentException("Illegal image uri");
         }
+        loadTask.setImageView(view);
+
+        defaultThreadPool.execute(loadTask);
     }
 
-    private void loadImageFromFile(String uri, final ImageView imageView, ImageLoadCallback callback) {
-        Bitmap bitmap = getImageFromCache(uri, imageView);
-        if (bitmap != null) {
-            if (callback == null) {
-                imageView.setImageBitmap(bitmap);
-            } else {
-                callback.onLoadCompleted(uri, bitmap);
-            }
-            return;
-        }
-
-//        final String cacheFileName = MD5.hashKeyForDisk(uri);
-//        final InputStream inputStream = diskCache.getStream(cacheFileName);
-//
-//        final String url = uri;
-//
-//        if (inputStream != null) {
-//            serialThreadPool.execute(new Runnable() {
-//                @Override
-//                public void run() {
-//                    final Bitmap mBitmap = BitmapFactory.decodeStream(inputStream);
-//                    handler.post(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            imageView.setImageBitmap(mBitmap);
-//                        }
-//                    });
-//                    memoryLRUCache.put(url, mBitmap);
-//                }
-//            });
-//
-//            return;
-//        }
-
-        if (urlMap.containsKey(imageView) && imageView != null) {
-            if (uri.equals(urlMap.get(imageView))) {
-                return;
-            } else {
-                imageView.setImageBitmap(placeholderBitmap);
-                urlMap.put(imageView, uri);
-            }
-        } else if (!urlMap.containsKey(imageView) && imageView != null) {
-            urlMap.put(imageView, uri);
-        }
-
-        if (imageView != null) {
-            imageView.setTag(uri);
-        }
-
-        FileTask task = new FileTask(this, uri, handler, diskCache, memoryLRUCache);
-        if (callback != null) {
-            // can play some animation or display progress bar here
-            callback.onLoadStarted(uri);
-            task.setCallback(callback);
-        }
-        if (imageView != null) {
-            task.setImageView(imageView);
-        }
-        defaultThreadPool.execute(task);
-    }
-
-    private void loadImageFromHttp(String uri, final ImageView imageView, final ImageLoadCallback callback) {
-        // 1.memory cache
-        Bitmap bitmap = getImageFromCache(uri, imageView);
-
-        if (bitmap != null) {
-            if (callback == null) {
-                imageView.setImageBitmap(bitmap);
-            } else {
-                callback.onLoadCompleted(uri, bitmap);
-            }
-            return;
-        }
-
-        // 2.disk cache
+    private boolean loadFromDiskCache(String uri, final ImageView imageView) {
         final String cacheFileName = MD5.hashKeyForDisk(uri);
         final InputStream inputStream = diskCache.getStream(cacheFileName);
 
@@ -222,37 +169,16 @@ public class ImageLoader {
                 }
             });
 
-            return;
+            return true;
         }
-
-        // 3.http
-        if (urlMap.containsKey(imageView) && imageView != null) {
-            if (uri.equals(urlMap.get(imageView))) {
-                return;
-            } else {
-                urlMap.put(imageView, uri);
-            }
-        } else {
-            urlMap.put(imageView, uri);
-        }
-
-        if (imageView != null) {
-            imageView.setTag(uri);
-        }
-
-        HttpTask task = new HttpTask(this, uri, handler, diskCache, memoryLRUCache);
-        if (callback != null) {
-            // can play some animation or display progress bar here
-            callback.onLoadStarted(uri);
-            task.setCallback(callback);
-        }
-        if (imageView != null) {
-            task.setImageView(imageView);
-        }
-        defaultThreadPool.execute(task);
+        return false;
     }
 
-    private void loadImageFromAssets(String uri, ImageView imageView, ImageLoadCallback callback) {
+    private boolean loadFromMemoryCache(String uri, ImageView imageView, ImageLoadCallback callback) {
+        if (imageView == null) {
+            return false;
+        }
+
         Bitmap bitmap = getImageFromCache(uri, imageView);
         if (bitmap != null) {
             if (callback == null) {
@@ -260,19 +186,9 @@ public class ImageLoader {
             } else {
                 callback.onLoadCompleted(uri, bitmap);
             }
-            return;
+            return true;
         }
-
-        AssetsTask task = new AssetsTask(uri, handler, memoryLRUCache, MyApplication.getInstance());
-        if (callback != null) {
-            // can play some animation or display progress bar here
-            callback.onLoadStarted(uri);
-            task.setCallback(callback);
-        }
-        if (imageView != null) {
-            task.setImageView(imageView);
-        }
-        defaultThreadPool.execute(task);
+        return false;
     }
 
     private Bitmap getImageFromCache(String uri, ImageView imageView) {
