@@ -1,4 +1,4 @@
-package geeksammao.bingyan.net.imageloader.core.network.task;
+package geeksammao.bingyan.net.imageloader.core.task;
 
 import android.widget.ImageView;
 
@@ -11,7 +11,7 @@ import geeksammao.bingyan.net.imageloader.core.callback.ImageLoadCallback;
 /**
  * Created by Geeksammao on 1/6/16.
  */
-public abstract class BaseTask implements Runnable {
+public abstract class LoadTask implements Runnable {
     protected ImageLoadCallback callback;
     protected ImageView imageView;
 

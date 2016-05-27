@@ -1,4 +1,4 @@
-package geeksammao.bingyan.net.imageloader.core.network.task;
+package geeksammao.bingyan.net.imageloader.core.task;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.FutureTask;

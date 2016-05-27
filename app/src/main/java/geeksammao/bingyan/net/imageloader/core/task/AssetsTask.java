@@ -1,4 +1,4 @@
-package geeksammao.bingyan.net.imageloader.core.network.task;
+package geeksammao.bingyan.net.imageloader.core.task;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -13,7 +13,7 @@ import geeksammao.bingyan.net.imageloader.util.ImageUtil;
 /**
  * Created by Geeksammao on 1/7/16.
  */
-public class AssetsTask extends BaseTask {
+public class AssetsTask extends LoadTask {
     private String uri;
     private Handler handler;
     private MemoryLRUCache<String, Bitmap> memoryLRUCache;

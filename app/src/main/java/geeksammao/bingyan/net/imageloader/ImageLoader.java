@@ -18,10 +18,10 @@ import geeksammao.bingyan.net.imageloader.cache.DiskCache;
 import geeksammao.bingyan.net.imageloader.cache.MD5;
 import geeksammao.bingyan.net.imageloader.cache.MemoryLRUCache;
 import geeksammao.bingyan.net.imageloader.core.callback.ImageLoadCallback;
-import geeksammao.bingyan.net.imageloader.core.network.task.AssetsTask;
-import geeksammao.bingyan.net.imageloader.core.network.task.BaseTask;
-import geeksammao.bingyan.net.imageloader.core.network.task.FileTask;
-import geeksammao.bingyan.net.imageloader.core.network.task.HttpTask;
+import geeksammao.bingyan.net.imageloader.core.task.AssetsTask;
+import geeksammao.bingyan.net.imageloader.core.task.LoadTask;
+import geeksammao.bingyan.net.imageloader.core.task.FileTask;
+import geeksammao.bingyan.net.imageloader.core.task.HttpTask;
 import geeksammao.bingyan.net.imageloader.util.MyApplication;
 
 /**
@@ -42,7 +42,7 @@ public class ImageLoader {
     private Handler handler = new Handler(Looper.getMainLooper());
     private DiskCache diskCache;
     private MemoryLRUCache<String, Bitmap> memoryLRUCache;
-    private BaseTask loadTask;
+    private LoadTask loadTask;
     private ExecutorService defaultThreadPool = Executors.newFixedThreadPool(4);
     private ExecutorService serialThreadPool = Executors.newFixedThreadPool(2);
 
@@ -202,7 +202,7 @@ public class ImageLoader {
         urlMap.remove(imageView);
     }
 
-    public void executeNewTask(BaseTask task) {
+    public void executeNewTask(LoadTask task) {
         defaultThreadPool.execute(task);
     }
 

@@ -10,23 +10,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ff50e0b2-ee4e-4391-9b19-68ba6f051188" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.10/tasks/_app_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.bin" afterPath="$PROJECT_DIR$/.gradle/2.10/tasks/_app_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.10/tasks/_app_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" afterPath="$PROJECT_DIR$/.gradle/2.10/tasks/_app_compileDebugJavaWithJavac/localClassSetAnalysis/localClassSetAnalysis.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.10/tasks/_app_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.bin" afterPath="$PROJECT_DIR$/.gradle/2.10/tasks/_app_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.bin" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.10/tasks/_app_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" afterPath="$PROJECT_DIR$/.gradle/2.10/tasks/_app_compileDebugJavaWithJavac/localJarClasspathSnapshot/localJarClasspathSnapshot.lock" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build/generated/mockable-android-23.jar" afterPath="$PROJECT_DIR$/build/generated/mockable-android-23.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gradle/2.10/taskArtifacts/cache.properties" afterPath="$PROJECT_DIR$/.gradle/2.10/taskArtifacts/cache.properties" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/ion_2_1_7.xml" afterPath="$PROJECT_DIR$/.idea/libraries/ion_2_1_7.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/app.iml" afterPath="$PROJECT_DIR$/app/app.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/app/build.gradle" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/network/task/AssetsTask.java" afterPath="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/task/AssetsTask.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/network/task/BaseTask.java" afterPath="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/task/LoadTask.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/network/task/FileTask.java" afterPath="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/task/FileTask.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/network/task/HttpFutureTask.java" afterPath="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/task/HttpFutureTask.java" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/network/task/HttpTask.java" afterPath="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/task/HttpTask.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/ImageLoader.java" afterPath="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/ImageLoader.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/network/task/BaseTask.java" afterPath="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/network/task/BaseTask.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/network/task/FileTask.java" afterPath="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/network/task/FileTask.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/network/task/HttpTask.java" afterPath="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/network/task/HttpTask.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/ui/Adapter.java" afterPath="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/ui/Adapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/local.properties" afterPath="$PROJECT_DIR$/local.properties" />
     </list>
     <ignored path="ImageLoader.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -76,10 +65,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Adapter.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Adapter.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/ui/Adapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-0.13381556">
+            <state vertical-scroll-proportion="0.0">
               <caret line="27" column="5" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
               <folding />
             </state>
@@ -92,17 +81,17 @@
             <state vertical-scroll-proportion="0.0">
               <caret line="16" column="47" selection-start-line="16" selection-start-column="45" selection-end-line="16" selection-end-column="47" />
               <folding>
-                <element signature="e#5913#6402#0" expanded="true" />
-                <element signature="e#6109#6314#0" expanded="true" />
-                <element signature="e#6313#6314#0" expanded="true" />
-                <element signature="e#6401#6402#0" expanded="true" />
+                <element signature="e#5881#6370#0" expanded="true" />
+                <element signature="e#6077#6282#0" expanded="true" />
+                <element signature="e#6281#6282#0" expanded="true" />
+                <element signature="e#6369#6370#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="FileTask.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/network/task/FileTask.java">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/task/FileTask.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="-19.185184">
               <caret line="97" column="1" selection-start-line="97" selection-start-column="1" selection-end-line="97" selection-end-column="1" />
@@ -111,11 +100,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="BaseTask.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/network/task/BaseTask.java">
+      <file leaf-file-name="LoadTask.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/task/LoadTask.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="32" column="4" selection-start-line="32" selection-start-column="4" selection-end-line="32" selection-end-column="4" />
+            <state vertical-scroll-proportion="0.61844486">
+              <caret line="28" column="29" selection-start-line="28" selection-start-column="29" selection-end-line="28" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -142,7 +131,7 @@
         </entry>
       </file>
       <file leaf-file-name="HttpTask.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/network/task/HttpTask.java">
+        <entry file="file://$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/task/HttpTask.java">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="0.0">
               <caret line="109" column="0" selection-start-line="109" selection-start-column="0" selection-end-line="109" selection-end-column="0" />
@@ -1864,6 +1853,8 @@
         <option value="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/network/task/HttpTask.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/network/task/FileTask.java" />
         <option value="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/ui/Adapter.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/task/BaseTask.java" />
+        <option value="$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/task/LoadTask.java" />
       </list>
     </option>
   </component>
@@ -2020,6 +2011,32 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="imageloader" />
               <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImageLoader" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="app" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidModuleNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="java" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidSourceTypeNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="imageloader" />
+              <option name="myItemType" value="com.android.tools.idea.navigator.nodes.AndroidPsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="core" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="task" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -2321,10 +2338,10 @@
         <state vertical-scroll-proportion="0.0">
           <caret line="16" column="47" selection-start-line="16" selection-start-column="45" selection-end-line="16" selection-end-column="47" />
           <folding>
-            <element signature="e#5913#6402#0" expanded="true" />
-            <element signature="e#6109#6314#0" expanded="true" />
-            <element signature="e#6313#6314#0" expanded="true" />
-            <element signature="e#6401#6402#0" expanded="true" />
+            <element signature="e#5881#6370#0" expanded="true" />
+            <element signature="e#6077#6282#0" expanded="true" />
+            <element signature="e#6281#6282#0" expanded="true" />
+            <element signature="e#6369#6370#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -2345,7 +2362,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/network/task/HttpTask.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/task/HttpTask.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
           <caret line="109" column="0" selection-start-line="109" selection-start-column="0" selection-end-line="109" selection-end-column="0" />
@@ -2353,15 +2370,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/network/task/BaseTask.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0">
-          <caret line="32" column="4" selection-start-line="32" selection-start-column="4" selection-end-line="32" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/network/task/AssetsTask.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/task/AssetsTask.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.19616519">
           <caret line="15" column="13" selection-start-line="15" selection-start-column="13" selection-end-line="15" selection-end-column="13" />
@@ -2369,7 +2378,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/network/task/FileTask.java">
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/task/FileTask.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-19.185184">
           <caret line="97" column="1" selection-start-line="97" selection-start-column="1" selection-end-line="97" selection-end-column="1" />
@@ -2387,8 +2396,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/ui/Adapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.13381556">
+        <state vertical-scroll-proportion="0.0">
           <caret line="27" column="5" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/main/java/geeksammao/bingyan/net/imageloader/core/task/LoadTask.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.61844486">
+          <caret line="28" column="29" selection-start-line="28" selection-start-column="29" selection-end-line="28" selection-end-column="29" />
           <folding />
         </state>
       </provider>

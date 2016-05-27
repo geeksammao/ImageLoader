@@ -1,4 +1,4 @@
-package geeksammao.bingyan.net.imageloader.core.network.task;
+package geeksammao.bingyan.net.imageloader.core.task;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,7 +19,7 @@ import geeksammao.bingyan.net.imageloader.util.MyApplication;
 /**
  * Created by Geeksammao on 1/7/16.
  */
-public class FileTask extends BaseTask {
+public class FileTask extends LoadTask {
     private ImageLoader imageLoader;
     private String uri;
     private String actualUri;

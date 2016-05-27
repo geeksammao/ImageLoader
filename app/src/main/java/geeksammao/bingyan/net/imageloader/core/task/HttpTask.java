@@ -1,4 +1,4 @@
-package geeksammao.bingyan.net.imageloader.core.network.task;
+package geeksammao.bingyan.net.imageloader.core.task;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -17,7 +17,7 @@ import geeksammao.bingyan.net.imageloader.util.ImageUtil;
 /**
  * Created by Geeksammao on 1/6/16.
  */
-public class HttpTask extends BaseTask {
+public class HttpTask extends LoadTask {
     private ImageLoader imageLoader;
     private DiskCache diskCache;
     private MemoryLRUCache<String, Bitmap> memoryLRUCache;
