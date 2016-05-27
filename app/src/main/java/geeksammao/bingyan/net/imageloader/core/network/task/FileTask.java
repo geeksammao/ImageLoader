@@ -5,10 +5,8 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 
 import geeksammao.bingyan.net.imageloader.ImageLoader;
 import geeksammao.bingyan.net.imageloader.R;
@@ -96,16 +94,5 @@ public class FileTask extends BaseTask {
                 callback.onLoadFailed(uri);
             }
         }
-    }
-
-    private byte[] convertStreamToByArray(BufferedInputStream inputStream) throws IOException {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        int length;
-        byte[] bytes = new byte[1024];
-        while ((length = inputStream.read(bytes)) != -1) {
-            baos.write(bytes, 0, length);
-        }
-
-        return baos.toByteArray();
     }
 }

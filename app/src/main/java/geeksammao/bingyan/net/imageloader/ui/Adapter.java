@@ -1,18 +1,17 @@
 package geeksammao.bingyan.net.imageloader.ui;
 
-import java.util.List;
-
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 import geeksammao.bingyan.net.imageloader.ImageLoader;
 import geeksammao.bingyan.net.imageloader.R;
 import geeksammao.bingyan.net.imageloader.constant.Images;
 import geeksammao.bingyan.net.imageloader.util.MyApplication;
-import geeksammao.bingyan.net.imageloader.util.NativeImageUtil;
 
 /**
  * Created by Geeksammao on 1/8/16.
@@ -25,7 +24,7 @@ public class Adapter extends RecyclerView.Adapter<MyViewHolder> {
     public Adapter() {
         this.context = MyApplication.getInstance();
         this.loading = true;
-        pathList = NativeImageUtil.getNativeImagePath(context);
+//        pathList = NativeImageUtil.getNativeImagePath(context);
     }
 
     public void setLoading(boolean loading) {

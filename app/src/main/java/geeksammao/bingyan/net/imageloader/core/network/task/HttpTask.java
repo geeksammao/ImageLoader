@@ -4,9 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 import geeksammao.bingyan.net.imageloader.ImageLoader;
@@ -109,18 +106,5 @@ public class HttpTask extends BaseTask {
             }
         }
 
-    }
-
-    private byte[] convertStreamToByArray(InputStream inputStream) throws IOException {
-        BufferedInputStream buff = new BufferedInputStream(inputStream, 1024);
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        int length;
-        byte[] bytes = new byte[1024];
-        while ((length = buff.read(bytes)) != -1) {
-            baos.write(bytes, 0, length);
-        }
-
-        return baos.toByteArray();
     }
 }

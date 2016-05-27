@@ -1,10 +1,5 @@
 package geeksammao.bingyan.net.imageloader;
 
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -13,6 +8,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 import android.widget.ImageView;
+
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import geeksammao.bingyan.net.imageloader.cache.DiskCache;
 import geeksammao.bingyan.net.imageloader.cache.MD5;
@@ -194,10 +194,6 @@ public class ImageLoader {
         Bitmap bitmap = memoryLRUCache.get(uri);
         if (bitmap == null) {
             imageView.setImageBitmap(placeholderBitmap);
-<<<<<<< HEAD
-        } else {
-=======
->>>>>>> 1d5d3d6335777559a59d017405271aad2cccb2ee
         }
         return bitmap;
     }
