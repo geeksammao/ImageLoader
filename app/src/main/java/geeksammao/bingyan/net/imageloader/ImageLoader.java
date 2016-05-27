@@ -11,18 +11,20 @@ import android.widget.ImageView;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.WeakHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import geeksammao.bingyan.net.imageloader.cache.DiskCache;
-import geeksammao.bingyan.net.imageloader.cache.MD5;
-import geeksammao.bingyan.net.imageloader.cache.MemoryLRUCache;
+import geeksammao.bingyan.net.imageloader.cache.disk.DiskCache;
+import geeksammao.bingyan.net.imageloader.cache.disk.MD5;
+import geeksammao.bingyan.net.imageloader.cache.memory.MemoryCache;
+import geeksammao.bingyan.net.imageloader.cache.memory.MemoryLRUCache;
 import geeksammao.bingyan.net.imageloader.core.callback.ImageLoadCallback;
 import geeksammao.bingyan.net.imageloader.core.task.AssetsTask;
-import geeksammao.bingyan.net.imageloader.core.task.LoadTask;
 import geeksammao.bingyan.net.imageloader.core.task.FileTask;
 import geeksammao.bingyan.net.imageloader.core.task.HttpTask;
-import geeksammao.bingyan.net.imageloader.util.MyApplication;
+import geeksammao.bingyan.net.imageloader.core.task.LoadTask;
 
 /**
  * Created by Geeksammao on 1/6/16.
@@ -36,12 +38,13 @@ public class ImageLoader {
 
     private static volatile ImageLoader mImageLoader;
     private Resources res;
-    private HashMap<ImageView, String> urlMap;
+    private WeakHashMap<ImageView, String> urlMap;
+    private Map<String, LoadTask> taskMap;
     private Bitmap placeholderBitmap;
     // the UI thread handler
     private Handler handler = new Handler(Looper.getMainLooper());
     private DiskCache diskCache;
-    private MemoryLRUCache<String, Bitmap> memoryLRUCache;
+    private MemoryCache memoryCache;
     private LoadTask loadTask;
     private ExecutorService defaultThreadPool = Executors.newFixedThreadPool(4);
     private ExecutorService serialThreadPool = Executors.newFixedThreadPool(2);
@@ -59,14 +62,15 @@ public class ImageLoader {
 
     private ImageLoader(Context context) {
         int maxSize = (int) Runtime.getRuntime().maxMemory();
-        urlMap = new HashMap<>();
+        urlMap = new WeakHashMap<>();
+        taskMap = new HashMap<>();
 
         diskCache = DiskCache.getInstance(context, CACHE_DIR_NAME);
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize = 5;
         res = context.getResources();
         placeholderBitmap = BitmapFactory.decodeResource(res, R.color.white, options);
-        memoryLRUCache = new MemoryLRUCache<>(maxSize / 6);
+        memoryCache = new MemoryLRUCache<>(maxSize / 6);
     }
 
     public void setPlaceholder(int resID) {
@@ -90,24 +94,26 @@ public class ImageLoader {
 
         switch (scheme) {
             case HTTP:
-                loadTask = new HttpTask(this, uri, handler, diskCache, memoryLRUCache);
+                loadTask = new HttpTask(this, uri, handler, diskCache, memoryCache);
                 break;
             case FILE:
-                loadTask = new FileTask(this, uri, handler, diskCache, memoryLRUCache);
+                loadTask = new FileTask(this, uri, handler, diskCache, memoryCache);
                 break;
             case CONTENT_PROVIDER:
-                loadTask = new FileTask(this, uri, handler, diskCache, memoryLRUCache);
+                loadTask = new FileTask(this, uri, handler, diskCache, memoryCache);
                 break;
             case ASSETS:
-                loadTask = new AssetsTask(uri, handler, memoryLRUCache, MyApplication.getInstance());
+                loadTask = new AssetsTask(this, uri, handler, diskCache, memoryCache);
+                ((AssetsTask)loadTask).setContext(MyApplication.getInstance());
                 break;
             default:
                 throw new IllegalArgumentException("Unknown image uri");
         }
         callback.onLoadStarted(uri);
         loadTask.setCallback(callback);
+        loadTask.future = defaultThreadPool.submit(loadTask);
 
-        defaultThreadPool.execute(loadTask);
+        taskMap.put(uri, loadTask);
     }
 
     public void loadImageToImageView(String uri, ImageView view) {
@@ -115,36 +121,57 @@ public class ImageLoader {
             throw new IllegalThreadStateException("Must call this method from main thread");
         }
 
-        // load from memory cache
-        if (loadFromMemoryCache(uri, view, null)) {
+        if (view == null) {
+            throw new IllegalArgumentException("The target view cannot be null");
+        }
+        // load from memory cache and disk cache
+        if (loadFromMemoryCache(uri, view, null) || loadFromDiskCache(uri,view)) {
             return;
         }
 
-        // load from disk cache
-        if (loadFromDiskCache(uri, view)) {
+        // deal with async load image order mess
+        if (!uri.equals(urlMap.get(view))) {
+            cancelExistingTask(uri);
+            addUriToMap(uri, view);
+        } else {
             return;
         }
 
         String scheme = TextUtils.substring(uri, 0, 4);
         switch (scheme) {
             case HTTP:
-                loadTask = new HttpTask(this, uri, handler, diskCache, memoryLRUCache);
+                loadTask = new HttpTask(this, uri, handler, diskCache, memoryCache);
                 break;
             case FILE:
-                loadTask = new FileTask(this, uri, handler, diskCache, memoryLRUCache);
+                loadTask = new FileTask(this, uri, handler, diskCache, memoryCache);
                 break;
             case CONTENT_PROVIDER:
-                loadTask = new FileTask(this, uri, handler, diskCache, memoryLRUCache);
+                loadTask = new FileTask(this, uri, handler, diskCache, memoryCache);
                 break;
             case ASSETS:
-                loadTask = new AssetsTask(uri, handler, memoryLRUCache, MyApplication.getInstance());
+                loadTask = new AssetsTask(this, uri, handler, diskCache, memoryCache);
+                ((AssetsTask)loadTask).setContext(MyApplication.getInstance());
                 break;
             default:
                 throw new IllegalArgumentException("Illegal image uri");
         }
         loadTask.setImageView(view);
+        loadTask.future = defaultThreadPool.submit(loadTask);
 
-        defaultThreadPool.execute(loadTask);
+        taskMap.put(uri, loadTask);
+    }
+
+    private void addUriToMap(String uri, ImageView view) {
+        if (urlMap != null)
+            urlMap.put(view, uri);
+        view.setImageBitmap(placeholderBitmap);
+    }
+
+    private void cancelExistingTask(String uri) {
+        LoadTask existingTask = taskMap.get(uri);
+        if (existingTask != null && existingTask.cancel()) {
+            taskMap.remove(existingTask);
+        }
     }
 
     private boolean loadFromDiskCache(String uri, final ImageView imageView) {
@@ -164,7 +191,7 @@ public class ImageLoader {
                             imageView.setImageBitmap(mBitmap);
                         }
                     });
-                    memoryLRUCache.put(url, mBitmap);
+                    memoryCache.put(url, mBitmap);
                 }
             });
 
@@ -174,10 +201,6 @@ public class ImageLoader {
     }
 
     private boolean loadFromMemoryCache(String uri, ImageView imageView, ImageLoadCallback callback) {
-        if (imageView == null) {
-            return false;
-        }
-
         Bitmap bitmap = getImageFromCache(uri, imageView);
         if (bitmap != null) {
             if (callback == null) {
@@ -191,17 +214,21 @@ public class ImageLoader {
     }
 
     private Bitmap getImageFromCache(String uri, ImageView imageView) {
-        Bitmap bitmap = memoryLRUCache.get(uri);
-        if (bitmap == null) {
+        Bitmap bitmap = memoryCache.get(uri);
+        if (bitmap == null && imageView != null) {
             imageView.setImageBitmap(placeholderBitmap);
         }
         return bitmap;
     }
 
     public void removeUrlFromMap(ImageView imageView) {
-        urlMap.remove(imageView);
+        if (imageView != null)
+            urlMap.remove(imageView);
     }
 
+    public void setMemoryCache(MemoryCache cache){
+        this.memoryCache = cache;
+    }
     public void executeNewTask(LoadTask task) {
         defaultThreadPool.execute(task);
     }

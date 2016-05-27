@@ -7,9 +7,9 @@ import android.os.Handler;
 import java.io.InputStream;
 
 import geeksammao.bingyan.net.imageloader.ImageLoader;
-import geeksammao.bingyan.net.imageloader.cache.DiskCache;
-import geeksammao.bingyan.net.imageloader.cache.MD5;
-import geeksammao.bingyan.net.imageloader.cache.MemoryLRUCache;
+import geeksammao.bingyan.net.imageloader.cache.disk.DiskCache;
+import geeksammao.bingyan.net.imageloader.cache.disk.MD5;
+import geeksammao.bingyan.net.imageloader.cache.memory.MemoryCache;
 import geeksammao.bingyan.net.imageloader.core.network.http.HttpUtil;
 import geeksammao.bingyan.net.imageloader.core.network.result.RequestResult;
 import geeksammao.bingyan.net.imageloader.util.ImageUtil;
@@ -18,19 +18,8 @@ import geeksammao.bingyan.net.imageloader.util.ImageUtil;
  * Created by Geeksammao on 1/6/16.
  */
 public class HttpTask extends LoadTask {
-    private ImageLoader imageLoader;
-    private DiskCache diskCache;
-    private MemoryLRUCache<String, Bitmap> memoryLRUCache;
-    private Handler handler;
-    private String uri;
-
-    public HttpTask(ImageLoader imageLoader, String uri, Handler handler, DiskCache diskCache, MemoryLRUCache<String, Bitmap> memoryLRUCache) {
-        super();
-        this.imageLoader = imageLoader;
-        this.handler = handler;
-        this.diskCache = diskCache;
-        this.memoryLRUCache = memoryLRUCache;
-        this.uri = uri;
+    public HttpTask(ImageLoader imageLoader, String uri, Handler handler, DiskCache diskCache, MemoryCache memoryCache) {
+        super(imageLoader, uri, handler, diskCache, memoryCache);
     }
 
     @Override
@@ -48,43 +37,15 @@ public class HttpTask extends LoadTask {
                 diskCache.save(cacheFileName, bitmapBytes);
 
                 if (imageView != null) {
-                    // if the tag equals the url,
-                    // set the bitmap to image
-                    if (imageView.getTag() != null && uri.equals(imageView.getTag())) {
-                        final Bitmap bitmap = ImageUtil.decodeBitmapWithScale(imageView, bitmapBytes);
-                        handler.post(new Runnable() {
-                            @Override
-                            public void run() {
-                                imageView.setImageBitmap(bitmap);
-                            }
-                        });
-                        // save as memory cache
-                        memoryLRUCache.put(uri, bitmap);
-//                        imageLoader.removeUrlFromMap(imageView);
-                    }
-                    // else,
-                    // start a new task
-                    else {
-//                        HttpTask newTask = new HttpTask(imageLoader, (String) imageView.getTag(),
-//                                handler, diskCache, memoryLRUCache);
-//                        newTask.setImageView(imageView);
-//                        imageLoader.executeNewTask(newTask);
-                        if (imageView.getTag() != null) {
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    imageLoader.loadImageToImageView((String) imageView.getTag(), imageView);
-                                }
-                            });
-                        } else {
-                            handler.post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    imageLoader.loadImageToImageView(uri, imageView);
-                                }
-                            });
+                    final Bitmap bitmap = ImageUtil.decodeBitmapWithScale(imageView, bitmapBytes);
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            imageView.setImageBitmap(bitmap);
                         }
-                    }
+                    });
+                    // save as memory cache
+                    memoryCache.put(uri, bitmap);
 
                     return;
                 }
@@ -96,7 +57,7 @@ public class HttpTask extends LoadTask {
                         callback.onLoadCompleted(uri, bitmap);
                     }
                 });
-                memoryLRUCache.put(uri, bitmap);
+                memoryCache.put(uri, bitmap);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -105,6 +66,5 @@ public class HttpTask extends LoadTask {
                 callback.onLoadFailed(uri);
             }
         }
-
     }
 }

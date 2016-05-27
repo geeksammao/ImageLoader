@@ -1,4 +1,4 @@
-package geeksammao.bingyan.net.imageloader.cache;
+package geeksammao.bingyan.net.imageloader.cache.disk;
 
 import android.content.Context;
 import android.os.Environment;

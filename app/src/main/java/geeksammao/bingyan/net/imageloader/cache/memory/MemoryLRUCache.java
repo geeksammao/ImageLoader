@@ -1,4 +1,4 @@
-package geeksammao.bingyan.net.imageloader.cache;
+package geeksammao.bingyan.net.imageloader.cache.memory;
 
 import android.graphics.Bitmap;
 import android.util.LruCache;
@@ -6,7 +6,7 @@ import android.util.LruCache;
 /**
  * Created by Geeksammao on 1/6/16.
  */
-public class MemoryLRUCache<K, V> {
+public class MemoryLRUCache<K, V> implements MemoryCache{
     private int maxSize;
     private LruCache<String, Bitmap> lruCache;
 
@@ -27,6 +27,7 @@ public class MemoryLRUCache<K, V> {
         return 1;
     }
 
+    @Override
     public final Bitmap get(String key) {
         if (key == null) {
             throw new NullPointerException("key == null");
@@ -34,6 +35,7 @@ public class MemoryLRUCache<K, V> {
         return lruCache.get(key);
     }
 
+    @Override
     public final void put(String key, Bitmap value) {
         if (key == null || value == null) {
             throw new NullPointerException("key == null or value == null");
@@ -41,6 +43,22 @@ public class MemoryLRUCache<K, V> {
         lruCache.put(key,value);
     }
 
+    @Override
+    public void clear() {
+
+    }
+
+    @Override
+    public int size() {
+        return lruCache.size();
+    }
+
+    @Override
+    public int maxSize() {
+        return lruCache.maxSize();
+    }
+
+    @Override
     public final void remove(String key) {
         if (key == null) {
             throw new NullPointerException("key == null");

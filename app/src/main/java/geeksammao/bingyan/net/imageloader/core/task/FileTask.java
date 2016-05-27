@@ -9,73 +9,46 @@ import java.io.File;
 import java.io.FileInputStream;
 
 import geeksammao.bingyan.net.imageloader.ImageLoader;
-import geeksammao.bingyan.net.imageloader.R;
-import geeksammao.bingyan.net.imageloader.cache.DiskCache;
-import geeksammao.bingyan.net.imageloader.cache.MD5;
-import geeksammao.bingyan.net.imageloader.cache.MemoryLRUCache;
+import geeksammao.bingyan.net.imageloader.cache.disk.DiskCache;
+import geeksammao.bingyan.net.imageloader.cache.disk.MD5;
+import geeksammao.bingyan.net.imageloader.cache.memory.MemoryCache;
 import geeksammao.bingyan.net.imageloader.util.ImageUtil;
-import geeksammao.bingyan.net.imageloader.util.MyApplication;
 
 /**
  * Created by Geeksammao on 1/7/16.
  */
 public class FileTask extends LoadTask {
-    private ImageLoader imageLoader;
-    private String uri;
     private String actualUri;
-    private Handler handler;
-    private MemoryLRUCache<String, Bitmap> memoryLRUCache;
-    private DiskCache diskCache;
 
-    public FileTask(ImageLoader imageLoader, String uri, Handler handler, DiskCache diskCache, MemoryLRUCache<String, Bitmap> memoryLRUCache) {
-        // get the actual path
-        this.uri = uri;
-        this.imageLoader = imageLoader;
-        this.actualUri = uri.substring(5);
-        this.handler = handler;
-        this.memoryLRUCache = memoryLRUCache;
-        this.diskCache = diskCache;
+    public FileTask(ImageLoader imageLoader, String uri, Handler handler, DiskCache diskCache, MemoryCache memoryCache) {
+        super(imageLoader, uri, handler, diskCache, memoryCache);
+        actualUri = uri.substring(5);
     }
 
     @Override
     void startTask() {
         if (imageView != null) {
-            if (imageView.getTag() != null && uri.equals(imageView.getTag())) {
-                File file = new File(actualUri);
-                try {
-                    BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file), 1024);
-                    byte[] bitmapBytes = convertStreamToByArray(bufferedInputStream);
-
-                    // save as disk cache
-                    String cacheFileName = MD5.hashKeyForDisk(uri);
-                    diskCache.save(cacheFileName, bitmapBytes);
-                } catch (Exception e) {
-                    e.printStackTrace();
-
-                }
-
-                final Bitmap bitmap = ImageUtil.decodeBitmapWithScale(imageView, actualUri);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        imageView.setImageBitmap(bitmap);
-                    }
-                });
-                if (bitmap != null) {
-                    memoryLRUCache.put(uri, bitmap);
-                }
-            } else {
-                if (imageView.getTag() != null) {
-                    handler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            imageView.setImageBitmap(BitmapFactory.decodeResource(MyApplication.getInstance().getResources(), R.color.white, new BitmapFactory.Options()));
-                            imageLoader.loadImageToImageView((String) imageView.getTag(), imageView);
-                        }
-                    });
-                }
+            File file = new File(actualUri);
+            try {
+                BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(file), 1024);
+                byte[] bitmapBytes = convertStreamToByArray(bufferedInputStream);
+                // save as disk cache
+                String cacheFileName = MD5.hashKeyForDisk(uri);
+                diskCache.save(cacheFileName, bitmapBytes);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
+            final Bitmap bitmap = ImageUtil.decodeBitmapWithScale(imageView, actualUri);
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    imageView.setImageBitmap(bitmap);
+                }
+            });
+            if (bitmap != null) {
+                memoryCache.put(uri, bitmap);
+            }
             return;
         }
 
@@ -87,7 +60,7 @@ public class FileTask extends LoadTask {
                     callback.onLoadCompleted(uri, bitmap);
                 }
             });
-            memoryLRUCache.put(uri, bitmap);
+            memoryCache.put(uri, bitmap);
         } catch (Exception e) {
             e.printStackTrace();
             if (callback != null) {

@@ -7,22 +7,22 @@ import android.os.Handler;
 
 import java.io.InputStream;
 
-import geeksammao.bingyan.net.imageloader.cache.MemoryLRUCache;
+import geeksammao.bingyan.net.imageloader.ImageLoader;
+import geeksammao.bingyan.net.imageloader.cache.disk.DiskCache;
+import geeksammao.bingyan.net.imageloader.cache.memory.MemoryCache;
 import geeksammao.bingyan.net.imageloader.util.ImageUtil;
 
 /**
  * Created by Geeksammao on 1/7/16.
  */
 public class AssetsTask extends LoadTask {
-    private String uri;
-    private Handler handler;
-    private MemoryLRUCache<String, Bitmap> memoryLRUCache;
     private Context context;
 
-    public AssetsTask(String uri, Handler handler, MemoryLRUCache<String, Bitmap> memoryLRUCache, Context context) {
-        this.uri = uri;
-        this.handler = handler;
-        this.memoryLRUCache = memoryLRUCache;
+    public AssetsTask(ImageLoader imageLoader, String uri, Handler handler, DiskCache diskCache, MemoryCache memoryCache) {
+        super(imageLoader, uri, handler, diskCache, memoryCache);
+    }
+
+    public void setContext(Context context){
         this.context = context;
     }
 
@@ -39,7 +39,7 @@ public class AssetsTask extends LoadTask {
                         imageView.setImageBitmap(bitmap);
                     }
                 });
-                memoryLRUCache.put(uri, bitmap);
+                memoryCache.put(uri, bitmap);
 
                 return;
             }
@@ -51,7 +51,7 @@ public class AssetsTask extends LoadTask {
                     callback.onLoadCompleted(uri, bitmap);
                 }
             });
-            memoryLRUCache.put(uri, bitmap);
+            memoryCache.put(uri, bitmap);
         } catch (Exception e) {
             e.printStackTrace();
             if (callback != null) {

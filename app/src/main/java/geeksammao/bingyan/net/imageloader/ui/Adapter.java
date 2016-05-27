@@ -9,9 +9,10 @@ import android.view.ViewGroup;
 import java.util.List;
 
 import geeksammao.bingyan.net.imageloader.ImageLoader;
+import geeksammao.bingyan.net.imageloader.MyApplication;
 import geeksammao.bingyan.net.imageloader.R;
 import geeksammao.bingyan.net.imageloader.constant.Images;
-import geeksammao.bingyan.net.imageloader.util.MyApplication;
+import geeksammao.bingyan.net.imageloader.util.NativeImageUtil;
 
 /**
  * Created by Geeksammao on 1/8/16.
@@ -24,7 +25,7 @@ public class Adapter extends RecyclerView.Adapter<MyViewHolder> {
     public Adapter() {
         this.context = MyApplication.getInstance();
         this.loading = true;
-//        pathList = NativeImageUtil.getNativeImagePath(context);
+        pathList = NativeImageUtil.getNativeImagePath(context);
     }
 
     public void setLoading(boolean loading) {
@@ -42,15 +43,10 @@ public class Adapter extends RecyclerView.Adapter<MyViewHolder> {
     public void onBindViewHolder(final MyViewHolder holder, int position) {
         ImageLoader imageLoader = ImageLoader.getInstance(context);
         imageLoader.loadImageToImageView(Images.images[position], holder.imageView);
-//        imageLoader.loadImageToImageView(pathList.get(position), holder.imageView);
-
-//        Picasso.with(context).load(Images.images[position]).into(holder.imageView);
-//        Ion.with(context).load(Images.images[position]).intoImageView(holder.imageView);
     }
 
     @Override
     public int getItemCount() {
-//        return 6;
         return Images.images.length;
     }
 }
