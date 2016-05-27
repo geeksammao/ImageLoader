@@ -3,7 +3,6 @@ package geeksammao.bingyan.net.imageloader.core.network.task;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
-import android.util.Log;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -67,9 +66,7 @@ public class FileTask extends BaseTask {
                 if (bitmap != null) {
                     memoryLRUCache.put(uri, bitmap);
                 }
-                Log.e("sam", "tag equals");
             } else {
-                Log.e("sam", "tag not equals");
                 if (imageView.getTag() != null) {
                     handler.post(new Runnable() {
                         @Override

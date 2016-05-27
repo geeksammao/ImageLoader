@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.ImageView;
 
 import java.io.InputStream;
@@ -283,10 +282,8 @@ public class ImageLoader {
     private Bitmap getImageFromCache(String uri, ImageView imageView) {
         Bitmap bitmap = memoryLRUCache.get(uri);
         if (bitmap == null) {
-            Log.e("a","cache not hit");
             imageView.setImageBitmap(placeholderBitmap);
         } else {
-            Log.e("a", "cache hit");
         }
 
         return bitmap;
