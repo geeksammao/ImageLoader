@@ -1,12 +1,12 @@
 package geeksammao.bingyan.net.imageloader.ui;
 
+import java.util.List;
+
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import java.util.List;
 
 import geeksammao.bingyan.net.imageloader.ImageLoader;
 import geeksammao.bingyan.net.imageloader.R;

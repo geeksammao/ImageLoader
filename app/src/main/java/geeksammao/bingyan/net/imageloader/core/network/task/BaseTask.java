@@ -7,14 +7,12 @@ import geeksammao.bingyan.net.imageloader.core.callback.ImageLoadCallback;
 /**
  * Created by Geeksammao on 1/6/16.
  */
-public abstract class BaseTask extends Thread {
+public abstract class BaseTask implements Runnable {
     protected ImageLoadCallback callback;
     protected ImageView imageView;
 
     @Override
     public void run() {
-        super.run();
-
         startTask();
     }
 
