@@ -27,7 +27,7 @@ public class AssetsTask extends LoadTask {
     }
 
     @Override
-    void startTask() {
+    void doTask() {
         try {
             InputStream inputStream = context.getAssets().open(uri);
 

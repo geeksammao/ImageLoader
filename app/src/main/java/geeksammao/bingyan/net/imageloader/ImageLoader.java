@@ -40,7 +40,7 @@ public class ImageLoader {
     private Resources res;
     private WeakHashMap<ImageView, String> urlMap;
     private Map<String, LoadTask> taskMap;
-    private Bitmap placeholderBitmap;
+    public Bitmap placeholderBitmap;
     // the UI thread handler
     private Handler handler = new Handler(Looper.getMainLooper());
     private DiskCache diskCache;
@@ -130,8 +130,9 @@ public class ImageLoader {
         }
 
         // deal with async load image order mess
-        if (!uri.equals(urlMap.get(view))) {
-            cancelExistingTask(uri);
+        String existingUri = urlMap.get(view);
+        if (!uri.equals(existingUri)) {
+            cancelExistingTask(existingUri,view);
             addUriToMap(uri, view);
         } else {
             return;
@@ -167,10 +168,11 @@ public class ImageLoader {
         view.setImageBitmap(placeholderBitmap);
     }
 
-    private void cancelExistingTask(String uri) {
+    private void cancelExistingTask(String uri,ImageView imageView) {
         LoadTask existingTask = taskMap.get(uri);
         if (existingTask != null && existingTask.cancel()) {
-            taskMap.remove(existingTask);
+            taskMap.remove(uri);
+            imageView.setImageBitmap(placeholderBitmap);
         }
     }
 
@@ -224,6 +226,10 @@ public class ImageLoader {
     public void removeUrlFromMap(ImageView imageView) {
         if (imageView != null)
             urlMap.remove(imageView);
+    }
+
+    public void removeRunningTask(String uri){
+        taskMap.remove(uri);
     }
 
     public void setMemoryCache(MemoryCache cache){

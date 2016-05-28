@@ -26,7 +26,7 @@ public class FileTask extends LoadTask {
     }
 
     @Override
-    void startTask() {
+    void doTask() {
         if (imageView != null) {
             File file = new File(actualUri);
             try {
@@ -40,16 +40,20 @@ public class FileTask extends LoadTask {
             }
 
             final Bitmap bitmap = ImageUtil.decodeBitmapWithScale(imageView, actualUri);
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    imageView.setImageBitmap(bitmap);
+            if (!isCancelled()){
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        imageView.setImageBitmap(bitmap);
+                    }
+                });
+                if (bitmap != null) {
+                    memoryCache.put(uri, bitmap);
                 }
-            });
-            if (bitmap != null) {
-                memoryCache.put(uri, bitmap);
+                return;
+            } else {
+
             }
-            return;
         }
 
         try {

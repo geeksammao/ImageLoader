@@ -36,13 +36,14 @@ public abstract class LoadTask implements Runnable {
 
     @Override
     public void run() {
-        startTask();
+        doTask();
         if (imageView != null) {
             imageLoader.removeUrlFromMap(imageView);
         }
+        imageLoader.removeRunningTask(uri);
     }
 
-    abstract void startTask();
+    abstract void doTask();
 
     public void setCallback(ImageLoadCallback callback) {
         this.callback = callback;
@@ -63,6 +64,10 @@ public abstract class LoadTask implements Runnable {
     }
 
     public boolean cancel() {
-        return future != null && future.cancel(false);
+        return future != null && future.cancel(true);
+    }
+
+    public boolean isCancelled(){
+        return future == null || future.isCancelled();
     }
 }

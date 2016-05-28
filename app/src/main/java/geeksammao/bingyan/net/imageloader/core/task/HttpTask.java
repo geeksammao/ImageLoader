@@ -23,7 +23,7 @@ public class HttpTask extends LoadTask {
     }
 
     @Override
-    void startTask() {
+    void doTask() {
         HttpUtil httpUtil = HttpUtil.getInstance();
         try {
             RequestResult<InputStream> result = httpUtil.getInputStream(uri);
@@ -36,7 +36,7 @@ public class HttpTask extends LoadTask {
                 String cacheFileName = MD5.hashKeyForDisk(uri);
                 diskCache.save(cacheFileName, bitmapBytes);
 
-                if (imageView != null) {
+                if (imageView != null && !isCancelled()) {
                     final Bitmap bitmap = ImageUtil.decodeBitmapWithScale(imageView, bitmapBytes);
                     handler.post(new Runnable() {
                         @Override
@@ -46,18 +46,19 @@ public class HttpTask extends LoadTask {
                     });
                     // save as memory cache
                     memoryCache.put(uri, bitmap);
-
                     return;
                 }
 
                 final Bitmap bitmap = BitmapFactory.decodeByteArray(bitmapBytes, 0, bitmapBytes.length);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        callback.onLoadCompleted(uri, bitmap);
-                    }
-                });
-                memoryCache.put(uri, bitmap);
+                if (!isCancelled()) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            callback.onLoadCompleted(uri, bitmap);
+                        }
+                    });
+                    memoryCache.put(uri, bitmap);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
