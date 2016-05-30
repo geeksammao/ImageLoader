@@ -18,8 +18,3 @@ Also,you can use `imageLoader.setPlaceHolder(int res)` to set custom placeholder
 #### Caution
 
 You must call the load method from the UI thread,and the load work is dealed with asynchronously by the loader.
-
-### PS
-
-This is a very first version,so the function,expansion and code implemention are quite poor.Decide to use `builder pattern` to implement loader,replace `thread` with `future` and implement custom `thread pool` later.
-
